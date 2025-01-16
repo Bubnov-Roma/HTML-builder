@@ -1,6 +1,7 @@
-const { stdin, stdout } = process;
 const fs = require('fs');
 const path = require('path');
+const { stdin, stdout } = process;
+const text = []
 
 fs.open(
     path.join(__dirname, 'text.txt'), 'w',
@@ -15,11 +16,11 @@ stdin.resume();
 stdin.setEncoding('utf-8');
 
 stdin.on('data', function (key) {
-    if (key === '\u0003') {
-        stdout.write('\nBye!\n');
+    text.push(key)
+    if (key === '\u0003' || text.join('').split('').slice(-4).join('') === 'exit') {
+        stdout.write('\nSaved in file "text.txt"\n');
         process.exit();
     }
-
     fs.appendFile(
         path.join(__dirname, 'text.txt'),
         key,
@@ -27,27 +28,5 @@ stdin.on('data', function (key) {
             if (err) throw err;
         }
     );
-
-    stdout.write(key);
-
+    stdout._write(key)
 });
-
-
-// function write() {
-
-    //     stdout.write('Write\'l something?\n');
-
-    //     stdin.on("data", data => {
-    //         const result = data;
-    //         let text = result.toString();
-    //         console.log(typeof text);
-
-    //         process.exit();
-    //     });
-
-
-    //     process.on('exit', () => stdout.write('Good luck!\n'));
-
-// }
-
-// write();
